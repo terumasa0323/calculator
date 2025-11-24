@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡素四則演算電卓</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 350px; /* 少し幅を広げました */
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            padding: 8px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* ボタンを4列に配置 */
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .button-grid input[type="button"] {
+            padding: 10px;
+            background-color: #007bff; /* ボタンの色を統一 */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .button-grid input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+        .label-text {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .result-box {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        /**
+         * 2つの入力値と演算子に基づいて計算を実行し、結果を表示する関数
+         * @param {string} operator - 実行する演算子 (+, -, *, /)
+         */
+        function calculate(operator) {
+            var ans;
+            // id="numA" の入力値を取得
+            var v1_str = document.getElementById("numA").value;
+            // id="numB" の入力値を取得
+            var v2_str = document.getElementById("numB").value;
+            
+            // 取得した文字列を数値に変換 (Number()を使用)
+            var v1 = Number(v1_str);
+            var v2 = Number(v2_str);
+            
+            // 入力が無効な数値でないかチェック
+            if (isNaN(v1) || isNaN(v2)) {
+                document.getElementById("result").value = "ERROR: 有効な数値を入力";
+                return;
+            }
+
+            // 演算子に基づいて計算を実行
+            switch (operator) {
+                case '+':
+                    ans = v1 + v2;
+                    break;
+                case '-':
+                    ans = v1 - v2;
+                    break;
+                case '*':
+                    ans = v1 * v2;
+                    break;
+                case '/':
+                    // ゼロ除算のチェック
+                    if (v2 === 0) {
+                        document.getElementById("result").value = "ERROR: ゼロ除算";
+                        return;
+                    }
+                    ans = v1 / v2;
+                    break;
+                default:
+                    ans = "ERROR: 無効な演算子";
+            }
+            
+            // id="result" の入力フィールドに答えを表示
+            document.getElementById("result").value = ans;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>四則演算</h1>
+        
+        <form>
+            <label for="numA" class="label-text">数値 A</label>
+            <input type="text" id="numA" value="10" placeholder="最初の数値を入力" />
+            
+            <label for="numB" class="label-text">数値 B</label>
+            <input type="text" id="numB" value="5" placeholder="次の数値を入力" />
+            
+            <!-- 四則演算ボタンのグリッド -->
+            <div class="button-grid">
+                <input type="button" onclick="calculate('+')" value="足す (+)" />
+                <input type="button" onclick="calculate('-')" value="引く (-)" />
+                <input type="button" onclick="calculate('*')" value="掛ける (*)" />
+                <input type="button" onclick="calculate('/')" value="割る (/)" />
+            </div>
+            
+            <label for="result" class="label-text">答え</label>
+            <input type="text" id="result" readonly value="2" class="result-box" />
+        </form>
+    </div>
+
+    <script>
+        // 初期ロード時に一度計算を実行 (初期値 10 / 5 = 2 を表示)
+        window.onload = function() {
+            calculate('/');
+        };
+    </script>
+</body>
+</html>
